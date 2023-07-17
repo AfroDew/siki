@@ -1,4 +1,4 @@
-import { component, createDefaultRenderProps, page, PageConfig } from "siki";
+import { component, page, PageConfig } from "siki";
 import { SignShape } from "$components";
 
 const ErrorAlert = component /*html*/`
@@ -10,15 +10,13 @@ const ErrorAlert = component /*html*/`
 const CONFIG: PageConfig = {
   path: "/signin",
   layouts: ["root", "website"],
-  async handle(request, render) {
-    const hookProps = createDefaultRenderProps(request);
-
+  async handle(request, props, render) {
     // Handle Post
     if (request.method === "POST") {
       const phoneNumber = (await request.formData()).get("phoneNumber");
 
       // Handle invalid number
-      if (!phoneNumber) return new Response(ErrorAlert(hookProps));
+      if (!phoneNumber) return new Response(ErrorAlert(props));
 
       console.log({ phoneNumber });
 

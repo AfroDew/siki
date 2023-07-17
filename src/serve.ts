@@ -1,13 +1,13 @@
 import { Layout } from "./layout.ts";
 import { Page } from "./page.ts";
 import { Raw } from "./raw.ts";
-import { RequestHandle } from "./shared.ts";
+import { matchRoute, RequestHandle } from "siki/shared";
 
 const PUBLIC_DIR = "./app/+static";
 const PORT = 8000;
 
 interface ServeConfig {
-  hooks: Record<string, Page | Raw>;
+  routes: Record<string, Page | Raw>;
   layouts?: Record<string, Layout>;
   deno?: {
     serve: Deno.ServeInit & (Deno.ServeOptions | Deno.ServeTlsOptions);
@@ -15,7 +15,7 @@ interface ServeConfig {
 }
 
 interface AppConfig {
-  hooks: Map<string, Page | Raw>;
+  routes: Map<string, Page | Raw>;
   layouts: Map<string, Layout>;
 }
 
@@ -23,7 +23,7 @@ interface AppConfig {
 export function serveSikiApp(config: ServeConfig) {
   // Create app config
   const appConfig: AppConfig = {
-    hooks: new Map(Object.entries(config.hooks)),
+    routes: new Map(Object.entries(config.routes)),
     layouts: new Map(Object.entries(config.layouts ?? {})),
   };
   const ac = new AbortController();
@@ -48,14 +48,16 @@ async function handleRequest(
   request: Request,
 ): Promise<Response> {
   const url = new URL(request.url);
-  const hook = config.hooks.get(url.pathname);
+  const route = matchRoute(config.routes, url.pathname);
 
-  // Handle request for raw hooks
-  if (hook && hook.type === "raw") return await hook.handle(request);
+  // Handle request for raw routes
+  if (route && route.content.type === "raw") {
+    return await route.content.handle(request);
+  }
 
-  // Handle request for page hooks
-  if (hook && hook.type === "page") {
-    const handleResult = await setupHandle(config, hook)(request);
+  // Handle request for page routes
+  if (route && route.content.type === "page") {
+    const handleResult = await setupHandle(config, route.content)(request);
     if (handleResult instanceof Response) return handleResult;
 
     return new Response(handleResult, {
@@ -67,14 +69,15 @@ async function handleRequest(
   // Handle static files
   const filePath = PUBLIC_DIR + url.pathname;
   const fileContent = await getFile(filePath);
-  // console.log({ url, filePath, fileContent });
   if (fileContent) return new Response(fileContent, { status: 200 });
 
   // Handle not found
-  const notFoundHook = config.hooks.get("404");
+  const notFoundRoute = matchRoute(config.routes, url.pathname);
 
-  if (notFoundHook && notFoundHook.type === "page") {
-    const handleResult = await setupHandle(config, notFoundHook)(request);
+  if (notFoundRoute && notFoundRoute.content.type === "page") {
+    const handleResult = await setupHandle(config, notFoundRoute.content)(
+      request,
+    );
 
     if (handleResult instanceof Response) return handleResult;
     return new Response(handleResult, {

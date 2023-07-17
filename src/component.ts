@@ -1,5 +1,5 @@
-import { RenderPropsHandle, SimpleType } from "./shared.ts";
-import { createRenderTemplate } from "./shared.ts";
+import { RenderPropsHandle, SimpleType } from "siki/shared";
+import { createRenderTemplate } from "siki/shared";
 
 /** Siki component */
 export function component(

@@ -5,7 +5,7 @@ import {
   RenderPropsHandle,
   RequestHandle,
   SimpleType,
-} from "./shared.ts";
+} from "siki/shared";
 
 /** Siki page */
 export function page(config: PageConfig) {
@@ -24,6 +24,7 @@ export function page(config: PageConfig) {
         if (config.handle) {
           return await config.handle(
             request,
+            defaultProps,
             (props) => renderTemplate({ ...defaultProps, ...props }),
           );
         }

@@ -1,4 +1,4 @@
-import { component, createDefaultRenderProps, page, PageConfig } from "siki";
+import { component, page, PageConfig } from "siki";
 import { SignShape } from "$components";
 
 const ErrorAlert = component /*html*/`
@@ -8,17 +8,8 @@ const ErrorAlert = component /*html*/`
 const CONFIG: PageConfig = {
   path: "/verify",
   layouts: ["root", "website"],
-  async handle(request, render) {
-    const hookProps = createDefaultRenderProps(request);
+  async handle(request, props, render) {
     const url = new URL(request.url);
-
-    // Handle render
-    if (request.method === "GET") {
-      return await render({
-        ...hookProps,
-        sessionId: url.searchParams.get("sessionId"),
-      });
-    }
 
     // Handle Post
     if (request.method === "POST") {
@@ -29,7 +20,7 @@ const CONFIG: PageConfig = {
       // Handle session id
       if (!sessionId || !code) {
         return new Response(ErrorAlert({
-          ...hookProps,
+          ...props,
           title: "Invalid Verification",
           body: "Error verifying your code, please try sign in again.",
         }));
@@ -42,12 +33,22 @@ const CONFIG: PageConfig = {
       });
     }
 
-    return render({});
+    // Prevent accessing
+    if (!url.searchParams.get("sessionId")) {
+      return new Response(null, {
+        status: 302,
+        headers: { "HX-Redirect": "/404" },
+      });
+    }
+
+    return await render({
+      ...props,
+      sessionId: url.searchParams.get("sessionId"),
+    });
   },
 };
 
 export default page(CONFIG) /*html*/`
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <section class="signup__area p-relative z-index-1 pt-100 pb-145">
   ${SignShape("1")}
   <div class="container">

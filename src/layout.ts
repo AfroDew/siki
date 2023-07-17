@@ -5,7 +5,7 @@ import {
   RenderPropsHandle,
   RequestHandle,
   SimpleType,
-} from "./shared.ts";
+} from "siki/shared";
 
 /** Siki layout */
 export function layout(config: LayoutConfig) {
@@ -23,7 +23,7 @@ export function layout(config: LayoutConfig) {
 
           // Call internal Handle if defined
           if (config.handle) {
-            return await config.handle(request, async (props) => {
+            return await config.handle(request, defaultProps, async (props) => {
               let childTemplate = "";
 
               // Run nested handle if any

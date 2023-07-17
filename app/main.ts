@@ -8,7 +8,7 @@ serveSikiApp({
     [RootLayout.id]: RootLayout,
     [WebsiteLayout.id]: WebsiteLayout,
   },
-  hooks: {
+  routes: {
     ...pages,
     "/clicked": page({ path: "/clicked" }) /*html*/`<div>You have click</div>`,
   },

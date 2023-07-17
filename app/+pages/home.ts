@@ -3,7 +3,7 @@ import { component, page, PageConfig, RenderPropsHandle } from "siki";
 const CONFIG: PageConfig = {
   path: "/",
   layouts: ["root", "website"],
-  handle(request, render) {
+  handle(request, _props, render) {
     console.log("Visited: ", request.url);
     return render({ title: "Home", user: { name: "Siki" } });
   },
