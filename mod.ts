@@ -1,1 +1,1 @@
-export * from "siki";
+export * from "./src/mod.ts";
