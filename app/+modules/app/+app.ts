@@ -2,28 +2,25 @@ import { block, component, module, page } from "siki";
 
 const Button = component /*html*/`
     <button hx-post="/clicked" hx-trigger="click" hx-target="#parent-div">
-        {user.name} please Click Me! - {title} ☺
+        {user.name} please Click Me! - {$head.title} ☺
+        ${(props) => {
+  console.log({ props });
+  return "";
+}}
     </button>
 `;
 
 export default module({
-  path: "/",
-
-  // async handle(request, props render) {
-  //     return await render("index", { logs:[] })
-  // },
-
+  path: "/app",
   routes: {
-    "$index": page({}) /*html*/`
+    "$::GET": page({ head: { title: "App" } }) /*html*/`
+        <h2>App</h2>
         ${Button}
-        <button hx-trigger="click" hx-target="#parent-div" hx-get="/clicked">
-            Click me 2
-        </button>
         <div>You are on the {title} page & your name is {user.name}</div>
         <div id="parent-div"></div>
     `,
 
-    clicked: block({}) /*html*/`
+    clicked: block() /*html*/`
         <div>
             <p>You've clicked ☺ </p>
         </div>

@@ -7,6 +7,7 @@ const layout = "website";
 export default module({
   path: "/signin",
   routes: {
+    // Handle Sign in page
     "$::GET": page({ head, layout }) /*html*/`
       <section class="signup__area p-relative z-index-1 pt-100 pb-145">
         ${SignShape("1")}
@@ -65,6 +66,7 @@ export default module({
       </section>
     `,
 
+    // Handle form submission
     "$::POST": block({ handle: handleSignAction }) /*html*/`
       <script>
         Swal.fire('Invalid Phone number', 'Provide a valid phone number', 'error')
@@ -74,6 +76,7 @@ export default module({
 });
 
 /*====================== Handlers =====================*/
+
 async function handleSignAction(
   request: Request,
   _props: RenderProps,

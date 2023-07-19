@@ -1,6 +1,6 @@
 import { serveSikiApp } from "siki";
 import { WebsiteLayout } from "./+layouts/website.ts";
-import pages from "+pages";
+import pages from "+modules";
 
 serveSikiApp({
   layouts: {

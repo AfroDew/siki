@@ -8,7 +8,7 @@
   },
   "imports": {
     "$data": "./app/data/mod.ts",
-    "+pages": "./app/+pages/mod.ts",
+    "+modules": "./app/+modules/mod.ts",
     "$components": "./app/components/mod.ts",
     "siki": "./src/mod.ts",
     "siki/shared": "./src/shared/mod.ts",

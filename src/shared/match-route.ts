@@ -7,17 +7,11 @@ export function matchRoute(
   request: Request,
 ): MatchedRoute | null {
   const { pathname } = new URL(request.url);
-  console.log({ url: request.url, meth: request.method, pathname });
+  console.log({ pathname });
 
   for (const [routePath, content] of routes) {
     // Split pathname and method from route pattern
     const [pattern, method] = routePath.split("::");
-
-    console.log({
-      routePath,
-      pattern,
-      method,
-    });
 
     // Check method
     if (method && !method.includes(request.method)) {

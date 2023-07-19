@@ -8,7 +8,7 @@ import {
 } from "siki/shared";
 
 /** Block are server Component */
-export function block(config: BlockConfig) {
+export function block(config?: BlockConfig) {
   return function (
     templates: TemplateStringsArray,
     ...values: SimpleType[] | RenderPropsHandle[]
@@ -16,12 +16,12 @@ export function block(config: BlockConfig) {
     const renderTemplate = createRenderTemplate(templates, values);
 
     return {
-      ...config,
+      ...(config && {}),
       type: "block",
       handle: async (request, route) => {
         const defaultProps = createDefaultRenderProps(request, route);
 
-        if (config.handle) {
+        if (config && config.handle) {
           return await config.handle(
             request,
             defaultProps,

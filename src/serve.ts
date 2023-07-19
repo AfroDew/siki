@@ -3,6 +3,7 @@ import { Page } from "./page.ts";
 import { matchRoute, RequestHandle } from "siki/shared";
 import { RootLayout } from "./root-layout.ts";
 import { Module, ModuleMap } from "./module.ts";
+import { loadModules } from "./map-essential-directories.ts";
 
 const PUBLIC_DIR = "./app/+static";
 const PORT = 8000;
@@ -21,8 +22,11 @@ interface AppConfig {
 }
 
 /** Serve Siki app */
-export function serveSikiApp(config: ServeConfig) {
-  const combinedModules = config.modules.reduce((a, c) => ({ ...a, ...c }), {});
+export async function serveSikiApp(config: ServeConfig) {
+  const modules = await loadModules();
+  const combinedModules = modules.reduce((a, c) => ({ ...a, ...c }), {});
+
+  console.log({ combinedModules });
 
   // Create app config
   const appConfig: AppConfig = {
