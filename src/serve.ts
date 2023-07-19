@@ -3,14 +3,16 @@ import { Page } from "./page.ts";
 import { matchRoute, RequestHandle } from "siki/shared";
 import { RootLayout } from "./root-layout.ts";
 import { Module, ModuleMap } from "./module.ts";
-import { loadModules } from "./map-essential-directories.ts";
+import { loadLayouts, loadModules } from "./map-essential-directories.ts";
 
 const PUBLIC_DIR = "./app/+static";
 const PORT = 8000;
 
 interface ServeConfig {
-  modules: Module[];
-  layouts?: Record<string, Layout>;
+  /** Modules or path to modules */
+  modules?: Module[] | string;
+  /** Layouts or path to layouts */
+  layouts?: Record<string, Layout> | string;
   deno?: {
     serve: Deno.ServeInit & (Deno.ServeOptions | Deno.ServeTlsOptions);
   };
@@ -22,16 +24,11 @@ interface AppConfig {
 }
 
 /** Serve Siki app */
-export async function serveSikiApp(config: ServeConfig) {
-  const modules = await loadModules();
-  const combinedModules = modules.reduce((a, c) => ({ ...a, ...c }), {});
-
-  console.log({ combinedModules });
-
+export async function serveSikiApp(config?: ServeConfig) {
   // Create app config
   const appConfig: AppConfig = {
-    layouts: new Map(Object.entries(config.layouts ?? {})),
-    routes: new Map(Object.entries(combinedModules)),
+    layouts: new Map(Object.entries(await loadLayouts())),
+    routes: new Map(Object.entries(await loadModules())),
   };
   const ac = new AbortController();
   const server = Deno.serve({
@@ -41,7 +38,7 @@ export async function serveSikiApp(config: ServeConfig) {
       console.log(`Server started at http://${hostname}:${port}`);
     },
     handler: async (request) => await handleRequest(appConfig, request),
-    ...(config.deno ?? {}),
+    ...(config?.deno ?? {}),
   });
 
   server.finished.then(() => console.log("Server closed"));

@@ -9,7 +9,7 @@ const Button = component /*html*/`
 export default module({
   path: "/",
   routes: {
-    "$": page({ head: { title: "Welcome" } }) /*html*/`
+    "$": page({ layout: "base<-website", head: { title: "Welcome" } }) /*html*/`
         ${Button}
         <button hx-trigger="click" hx-target="#parent-div" hx-get="/clicked">
             Click me 2

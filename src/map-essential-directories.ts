@@ -1,12 +1,15 @@
+import { Layout } from "./layout.ts";
 import { Module } from "./module.ts";
 
 const MODULES_DIR_PATH = Deno.cwd() + "/app/+modules";
 const LAYOUTS_DIR_PATH = Deno.cwd() + "/app/+layouts";
 
-export async function loadModules(path: string = MODULES_DIR_PATH) {
-  let modules: Module[] = [];
+export async function loadModules(
+  path: string = MODULES_DIR_PATH,
+): Promise<Module> {
+  let items: Module = {};
 
-  // Read modules directory content
+  // Read items directory content
   for await (const entry of Deno.readDir(path)) {
     // Prevent entries that a not dir and not module files
     if (!entry.isDirectory && !entry.name.startsWith("+")) {
@@ -17,10 +20,9 @@ export async function loadModules(path: string = MODULES_DIR_PATH) {
 
     // Get module file. Files that begins with '+'
     if (entry.isDirectory) {
-      // Get modules in directory
-      modules = modules.concat(
-        await loadModules(entryPath),
-      );
+      // Get items in directory
+      items = { ...items, ...(await loadModules(entryPath)) };
+
       continue;
     }
 
@@ -28,10 +30,47 @@ export async function loadModules(path: string = MODULES_DIR_PATH) {
     const module = (await import(entryPath)).default;
 
     if (typeof module === "object" && !Array.isArray(module)) {
-      modules = modules.concat([module]);
+      items = { ...items, ...module };
       continue;
     }
   }
 
-  return modules;
+  return items;
+}
+
+export async function loadLayouts(
+  path: string = LAYOUTS_DIR_PATH,
+): Promise<Record<string, Layout>> {
+  let layouts: Record<string, Layout> = {};
+
+  // Read layouts directory content
+  for await (const entry of Deno.readDir(path)) {
+    // Prevent entries that a not dir and not layout files
+    if (!entry.isDirectory && !entry.name.startsWith("+")) {
+      continue;
+    }
+
+    const entryPath = `${path}/${entry.name}`;
+
+    // Get layout file. Files that begins with '+'
+    if (entry.isDirectory) {
+      // Get layouts in directory
+      layouts = {
+        ...layouts,
+        ...(await loadLayouts(entryPath)),
+      };
+
+      continue;
+    }
+
+    // Import layout
+    const layout: Layout = (await import(entryPath)).default;
+
+    if (layout && typeof layout === "object" && !Array.isArray(layout)) {
+      layouts = { ...layouts, [layout.id]: layout };
+      continue;
+    }
+  }
+
+  return layouts;
 }
