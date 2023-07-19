@@ -1,10 +1,6 @@
-import { component, module, page, PageConfig, Render, RenderProps } from "siki";
-import { SignShape } from "$components";
+import { module, page, Render, RenderProps } from "siki";
+import { Alert, SignShape } from "$components";
 import { block } from "../../src/block.ts";
-
-const ErrorAlert = component /*html*/`
-<script> Swal.fire("{title}", "{body}", 'error')</script>
-`;
 
 const layout = "website";
 const head = { title: "Verification" };
@@ -59,7 +55,7 @@ export default module({
       </section>
     `,
 
-    "$::POST": block({ handle: handleVerify }) /*html*/`${ErrorAlert}`,
+    "$::POST": block({ handle: handleVerify }) /*html*/`${Alert}`,
   },
 });
 
@@ -79,6 +75,7 @@ async function handleVerify(
     return render({
       title: "Invalid Verification",
       body: "Error verifying your code, please try sign in again.",
+      icon: "error",
     });
   }
 

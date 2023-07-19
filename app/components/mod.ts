@@ -3,3 +3,4 @@ export * from "./Footer.ts";
 export * from "./UserIcon.ts";
 export * from "./SignShape.ts";
 export * from "./layout.ts";
+export * from "./Alert.ts";

@@ -7,7 +7,6 @@ export function matchRoute(
   request: Request,
 ): MatchedRoute | null {
   const { pathname } = new URL(request.url);
-  console.log({ pathname });
 
   for (const [routePath, content] of routes) {
     // Split pathname and method from route pattern

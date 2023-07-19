@@ -4,7 +4,7 @@ const Button = component /*html*/`
     <button hx-post="/clicked" hx-trigger="click" hx-target="#parent-div">
         {user.name} please Click Me! - {$head.title} ☺
         ${(props) => {
-  console.log({ props });
+  // console.log({ props });
   return "";
 }}
     </button>

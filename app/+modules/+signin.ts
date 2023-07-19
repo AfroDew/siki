@@ -1,5 +1,5 @@
 import { block, module, page, Render, RenderProps } from "siki";
-import { SignShape } from "$components";
+import { Alert, SignShape } from "$components";
 
 const head = { title: "Sign In" };
 const layout = "website";
@@ -67,11 +67,7 @@ export default module({
     `,
 
     // Handle form submission
-    "$::POST": block({ handle: handleSignAction }) /*html*/`
-      <script>
-        Swal.fire('Invalid Phone number', 'Provide a valid phone number', 'error')
-      </script>
-    `,
+    "$::POST": block({ handle: handleSignAction }) /*html*/`${Alert}`,
   },
 });
 
@@ -85,9 +81,15 @@ async function handleSignAction(
   const phoneNumber = (await request.formData()).get("phoneNumber");
 
   // Handle invalid number
-  if (!phoneNumber) return render();
+  if (!phoneNumber) {
+    return render({
+      title: "Invalid Phone number",
+      body: "Provide a valid phone number",
+      icon: "error",
+    });
+  }
 
-  console.log({ phoneNumber });
+  // TODO: LOGIN
 
   // Handle Success
   return new Response(null, {
