@@ -1,6 +1,6 @@
 import { websiteMenu } from "$data";
 import { TopHeader } from "./TopHeader.ts";
-import { component, HookProps } from "siki";
+import { component, RenderProps } from "siki";
 
 const SearchBar = component /*html*/`
 
@@ -37,11 +37,7 @@ export const Header = component /*html*/`
 <header>
       <div class="header__area">
         ${TopHeader}
-        <div
-          class="header__bottom ${(props) =>
-  props.headerSticky ? "header__sticky" : ""}"
-          id="header-sticky"
-        >
+        <div class="header__bottom ${setHeaderStick}" id="header-sticky">
           <div class="container">
             <div class="row align-items-center">
               <div class="col-xxl-1 col-xl-1 col-lg-1 col-md-6 col-6">
@@ -77,8 +73,12 @@ export const Header = component /*html*/`
     </header>
 `;
 
-function setActiveLink(linkUrl: string, props: HookProps) {
+function setActiveLink(linkUrl: string, props: RenderProps) {
   return props.$url.pathname === linkUrl ? "is-active" : "";
+}
+
+function setHeaderStick(props: RenderProps) {
+  return props.headerSticky ? "header__sticky" : "";
 }
 
 // const SearchBar = () => {

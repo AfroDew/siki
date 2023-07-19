@@ -1,14 +1,34 @@
-export function matchRoute<T>(
-  routes: Map<string, T>,
-  route: string,
-): MatchedRoute<T> | null {
-  for (const [pattern, content] of routes) {
-    const regexPattern = pattern.replace(
-      /\[(.*?)\]/g,
-      (_, placeholder) => `(?<${placeholder}>[^/]+)`,
-    );
+import { ModuleContent, ModuleMap } from "../module.ts";
+
+const PARAMS_REGX = /\[(.*?)\]/g;
+
+export function matchRoute(
+  routes: ModuleMap,
+  request: Request,
+): MatchedRoute | null {
+  const { pathname } = new URL(request.url);
+  console.log({ url: request.url, meth: request.method, pathname });
+
+  for (const [routePath, content] of routes) {
+    // Split pathname and method from route pattern
+    const [pattern, method] = routePath.split("::");
+
+    console.log({
+      routePath,
+      pattern,
+      method,
+    });
+
+    // Check method
+    if (method && !method.includes(request.method)) {
+      continue;
+    }
+
+    const regexPattern = pattern.replace(PARAMS_REGX, (_, placeholder) => {
+      return `(?<${placeholder}>[^/]+)`;
+    });
     const regex = new RegExp(`^${regexPattern}/?$`);
-    const match = route.match(regex);
+    const match = pathname.match(regex);
 
     if (match) {
       const params: Record<string, string> = {};
@@ -25,8 +45,8 @@ export function matchRoute<T>(
   return null; // No match found
 }
 
-interface MatchedRoute<T> {
+export interface MatchedRoute {
   pattern: string;
-  content: T;
+  content: ModuleContent;
   params: Record<string, string>;
 }

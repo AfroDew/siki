@@ -1,3 +1,5 @@
+import { Page } from "../page.ts";
+import { Raw } from "../raw.ts";
 import type {
   RenderProps,
   RenderPropsHandle,
@@ -7,7 +9,7 @@ import { MatchedRoute } from "./match-route.ts";
 
 export function createDefaultRenderProps(
   request: Request,
-  route: MatchedRoute,
+  route: MatchedRoute<Page | Raw>,
 ): RenderProps {
   const url = new URL(request.url);
 

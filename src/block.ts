@@ -2,26 +2,22 @@ import {
   createDefaultRenderProps,
   createRenderTemplate,
   Handle,
-  PageHead,
   RenderPropsHandle,
   RequestHandle,
   SimpleType,
 } from "siki/shared";
 
-/** Siki page */
-export function page(config: PageConfig) {
+/** Block are server Component */
+export function block(config: BlockConfig) {
   return function (
     templates: TemplateStringsArray,
     ...values: SimpleType[] | RenderPropsHandle[]
-  ): Page {
+  ): Block {
     const renderTemplate = createRenderTemplate(templates, values);
 
     return {
       ...config,
-      type: "page",
-      layouts: !config.layout
-        ? []
-        : config.layout.trim().split("<-").map((x) => x.trim()),
+      type: "block",
       handle: async (request, route) => {
         const defaultProps = createDefaultRenderProps(request, route);
 
@@ -39,15 +35,11 @@ export function page(config: PageConfig) {
   };
 }
 
-export interface PageConfig {
-  head?: PageHead;
-  layout?: string;
+export interface BlockConfig {
   handle?: Handle;
 }
 
-export interface Page {
-  type: "page";
+export interface Block {
+  type: "block";
   handle: RequestHandle;
-  layouts: string[];
-  head?: PageHead;
 }

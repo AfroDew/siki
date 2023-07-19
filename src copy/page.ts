@@ -2,7 +2,6 @@ import {
   createDefaultRenderProps,
   createRenderTemplate,
   Handle,
-  PageHead,
   RenderPropsHandle,
   RequestHandle,
   SimpleType,
@@ -19,9 +18,6 @@ export function page(config: PageConfig) {
     return {
       ...config,
       type: "page",
-      layouts: !config.layout
-        ? []
-        : config.layout.trim().split("<-").map((x) => x.trim()),
       handle: async (request, route) => {
         const defaultProps = createDefaultRenderProps(request, route);
 
@@ -29,7 +25,7 @@ export function page(config: PageConfig) {
           return await config.handle(
             request,
             defaultProps,
-            (props) => renderTemplate({ ...defaultProps, ...(props ?? {}) }),
+            (props) => renderTemplate({ ...defaultProps, ...props }),
           );
         }
 
@@ -40,14 +36,15 @@ export function page(config: PageConfig) {
 }
 
 export interface PageConfig {
-  head?: PageHead;
-  layout?: string;
+  path: string;
+  title?: string;
+  layouts?: string[];
   handle?: Handle;
 }
 
 export interface Page {
   type: "page";
+  path: string;
   handle: RequestHandle;
-  layouts: string[];
-  head?: PageHead;
+  layouts?: string[];
 }

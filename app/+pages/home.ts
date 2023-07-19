@@ -1,34 +1,32 @@
-import { component, page, PageConfig, RenderPropsHandle } from "siki";
-
-const CONFIG: PageConfig = {
-  path: "/",
-  layouts: ["root", "website"],
-  handle(request, _props, render) {
-    console.log("Visited: ", request.url);
-    return render({ title: "Home", user: { name: "Siki" } });
-  },
-};
-
-const renderTitle: RenderPropsHandle = (props) => {
-  return ["☺", "️☺️"].reduce((acc, x) => acc + ` ${props.title + x}`, "");
-};
+import { block, component, module, page } from "siki";
 
 const Button = component /*html*/`
-    <button hx-post="/clicked"
-    hx-trigger="click"
-    hx-target="#parent-div"
-    hx-confirm="Are you sure you wish to delete your account?"
-    >{user.name} please Click Me! - ${renderTitle}</button>
+    <button hx-post="/clicked" hx-trigger="click" hx-target="#parent-div">
+        {user.name} please Click Me! - {title} ☺
+    </button>
 `;
 
-export default page(CONFIG) /*html*/`
-    ${Button}
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <button hx-trigger="click" hx-target="#parent-div" hx-get="/clicked" _="on click
-            call Swal.fire({title: 'Confirm', text:'Do you want to continue?'})
-            if result.isConfirmed trigger confirmed">
-      Click me 2
-    </button>
-    <div>You are on the {title} page & your name is {user.name}</div>
-    <div id="parent-div"></div>
-`;
+export default module({
+  path: "/",
+
+  // async handle(request, props render) {
+  //     return await render("index", { logs:[] })
+  // },
+
+  routes: {
+    "$index": page({}) /*html*/`
+        ${Button}
+        <button hx-trigger="click" hx-target="#parent-div" hx-get="/clicked">
+            Click me 2
+        </button>
+        <div>You are on the {title} page & your name is {user.name}</div>
+        <div id="parent-div"></div>
+    `,
+
+    clicked: block({}) /*html*/`
+        <div>
+            <p>You've clicked ☺ </p>
+        </div>
+    `,
+  },
+});

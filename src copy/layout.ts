@@ -2,7 +2,6 @@ import {
   createDefaultRenderProps,
   createRenderTemplate,
   Handle,
-  // PageHead,
   RenderPropsHandle,
   RequestHandle,
   SimpleType,
@@ -18,12 +17,9 @@ export function layout(config: LayoutConfig) {
 
     return {
       ...config,
-      setupHandle: (handleNext, initProps) => {
+      setupHandle: (handleNext) => {
         return async (request, route) => {
-          const defaultProps = {
-            ...createDefaultRenderProps(request, route),
-            ...(initProps ?? {}),
-          };
+          const defaultProps = createDefaultRenderProps(request, route);
 
           // Call internal Handle if defined
           if (config.handle) {
@@ -45,7 +41,7 @@ export function layout(config: LayoutConfig) {
               return renderTemplate({
                 ...defaultProps,
                 child: childTemplate,
-                ...(props ?? {}),
+                ...props,
               });
             });
           }
@@ -73,7 +69,6 @@ export function layout(config: LayoutConfig) {
 
 interface LayoutConfig {
   id: string;
-  // head?: PageHead;
   handle?: Handle;
 }
 
@@ -82,5 +77,5 @@ export interface Layout extends LayoutConfig {
 }
 
 interface SetupHookHandle {
-  (handleNext?: RequestHandle, initProps?: Record<string, any>): RequestHandle;
+  (handleNext?: RequestHandle): RequestHandle;
 }
