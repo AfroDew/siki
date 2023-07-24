@@ -44,7 +44,7 @@ export function layout(config: LayoutConfig) {
               // Render Layout
               return renderTemplate({
                 ...defaultProps,
-                child: childTemplate,
+                $child: childTemplate,
                 ...(props ?? {}),
               });
             });
@@ -64,7 +64,7 @@ export function layout(config: LayoutConfig) {
           }
 
           // Render Layout
-          return renderTemplate({ ...defaultProps, child: childTemplate });
+          return renderTemplate({ ...defaultProps, $child: childTemplate });
         };
       },
     };

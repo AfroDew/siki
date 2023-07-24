@@ -15,7 +15,7 @@ export const RootLayout = layout({ id: "$root" }) /*html*/`
         ${attachRaw}
     </head>
     <body>
-        {child}
+        {{$child}}
     </body>
     </html>
 `;

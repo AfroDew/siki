@@ -35,7 +35,7 @@ export function createRenderTemplate(
       return acc + str + value;
     }, "")
       .trim()
-      .replace(/\{([^}]+)\}/g, (_, placeholder) => {
+      .replace(/\{{([^}]+)\}}/g, (_, placeholder) => {
         // Handle nested property access
         if (placeholder.includes(".")) {
           const fieldPaths = placeholder.trim().split(".") as string[];

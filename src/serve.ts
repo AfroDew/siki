@@ -5,7 +5,7 @@ import { RootLayout } from "./root-layout.ts";
 import { Module, ModuleMap } from "./module.ts";
 import { loadLayouts, loadModules } from "./map-essential-directories.ts";
 
-const PUBLIC_DIR = "./app/+static";
+const PUBLIC_DIR = "./+static";
 const PORT = 8000;
 
 interface ServeConfig {
@@ -91,7 +91,14 @@ async function handleRequest(
   // Handle static files
   const filePath = PUBLIC_DIR + url.pathname;
   const fileContent = await getFile(filePath);
-  if (fileContent) return new Response(fileContent, { status: 200 });
+  if (fileContent) {
+    return new Response(fileContent, {
+      status: 200,
+      headers: filePath.endsWith(".js")
+        ? { "Content-Type": "text/javascript" }
+        : {},
+    });
+  }
 
   // Handle not found
   const notFoundRoute = matchRoute(config.routes, request);
