@@ -34,35 +34,64 @@ export function deleteCookies(headers: Headers, names: string[]) {
 
 /** Set cookies for response headers   */
 export function setCookies(headers: Headers, cookies: Cookie[]) {
-  for (const { name, value, ...others } of cookies) {
-    const cookieString = Object.entries(others).reduce((acc, [key, value]) => {
-      return acc + `; ${cookieKeyMap[key]}:${value}`;
-    }, `${name}=${value}`);
+  for (const cookie of cookies) {
+    let cookieString = `${encodeURIComponent(cookie.name)}=${
+      encodeURIComponent(cookie.value)
+    }`;
+
+    if (cookie.expires) {
+      cookieString += `; Expires=${
+        cookie.expires instanceof Date
+          ? cookie.expires.toUTCString()
+          : cookie.expires
+      }`;
+    }
+
+    if (cookie.maxAge !== undefined) {
+      cookieString += `; Max-Age=${cookie.maxAge}`;
+    }
+
+    if (cookie.domain) {
+      cookieString += `; Domain=${cookie.domain}`;
+    }
+
+    if (cookie.path) {
+      cookieString += `; Path=${cookie.path}`;
+    }
+
+    if (cookie.secure) {
+      cookieString += `; Secure`;
+    }
+
+    if (cookie.httpOnly) {
+      cookieString += `; HttpOnly`;
+    }
+
+    if (cookie.partitioned) {
+      cookieString += `; Partitioned`;
+    }
+
+    if (cookie.sameSite) {
+      cookieString += `; SameSite=${cookie.sameSite}`;
+    }
 
     headers.set("Set-Cookie", cookieString);
   }
 
+  console.log({ cookies, headers });
+
   return headers;
 }
-
-const cookieKeyMap: any = {
-  expires: "Expires",
-  maxAge: "MaxAge",
-  domain: "Domain",
-  path: "Path",
-  secure: "Secure",
-  httpOnly: "HttpOnly",
-  sameSite: "SameSite",
-};
 
 export interface Cookie {
   name: string;
   value: string;
-  expires?: Date;
+  expires?: Date | string;
   maxAge?: number;
   domain?: string;
   path?: string;
   secure?: boolean;
   httpOnly?: boolean;
+  partitioned?: boolean;
   sameSite?: "Strict" | "Lax" | "None";
 }

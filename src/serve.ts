@@ -16,6 +16,7 @@ interface ServeConfig {
   deno?: {
     serve: Deno.ServeInit & (Deno.ServeOptions | Deno.ServeTlsOptions);
   };
+  middleware?(request: Request): Promise<Response | void> | Response | void;
 }
 
 interface AppConfig {
@@ -37,7 +38,14 @@ export async function serveSikiApp(config?: ServeConfig) {
     onListen({ port, hostname }) {
       console.log(`Server started at http://${hostname}:${port}`);
     },
-    handler: async (request) => await handleRequest(appConfig, request),
+    handler: async (request) => {
+      if (!config?.middleware) return await handleRequest(appConfig, request);
+
+      // Handle middleware
+      const response = await config.middleware(request);
+
+      return response ? response : await handleRequest(appConfig, request);
+    },
     ...(config?.deno ?? {}),
   });
 
