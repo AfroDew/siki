@@ -2,6 +2,7 @@ import {
   createDefaultRenderProps,
   createRenderTemplate,
   Handle,
+  PageHead,
   // PageHead,
   RenderPropsHandle,
   RequestHandle,
@@ -73,7 +74,7 @@ export function layout(config: LayoutConfig) {
 
 interface LayoutConfig {
   id: string;
-  // head?: PageHead;
+  head?: PageHead;
   handle?: Handle;
 }
 

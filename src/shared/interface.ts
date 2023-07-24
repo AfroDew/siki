@@ -13,17 +13,23 @@ export interface RenderProps extends Record<string, any> {
 
 export interface PageHead {
   title?: string;
-  meta?: MetaTagAttribute[];
   /** Can be used to add more elements to head */
-  raw?: string;
+  raw?: RenderPropsHandle;
 }
 
-interface MetaTagAttribute {
-  name?: string;
-  content?: string;
-  "http-equiv"?: string;
-  charset?: string;
-}
+// export interface PageHead {
+//   title?: string;
+//   meta?: MetaTagAttribute[];
+//   /** Can be used to add more elements to head */
+//   raw?: string;
+// }
+
+// interface MetaTagAttribute {
+//   name?: string;
+//   content?: string;
+//   "http-equiv"?: string;
+//   charset?: string;
+// }
 
 export interface RenderPropsHandle {
   (props: RenderProps): string;
