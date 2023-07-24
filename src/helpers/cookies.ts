@@ -1,22 +1,19 @@
 export function getCookies(request: Request) {
   // Get the "cookie" header from the request.
   const cookieHeader = request.headers.get("cookie");
-  const cookieMap = new Map<string, Cookie>();
-
-  console.log({ headers: request.headers });
+  const cookieMap = new Map<string, string>();
 
   if (cookieHeader) {
-    // Split the "cookie" header by semicolon to get individual cookies.
-    const cookies = cookieHeader.split(";").map((cookie) => cookie.trim());
+    cookieHeader
+      // Split the "cookie" header by semicolon to get individual cookies.
+      .split(";")
+      .map((cookie) => cookie.trim())
+      .forEach((cookie) => {
+        const [key, value] = cookie.split("=");
 
-    // Parse each cookie into a key-value object.
-    const cookieMap = cookies.reduce((map, cookie) => {
-      const [key, value] = cookie.split("=");
-      map[key] = value;
-      return map;
-    }, {} as Record<string, string>);
-
-    console.log("Cookies:", cookieMap);
+        // Parse each cookie into a key-value map.
+        cookieMap.set(key, value);
+      });
   }
 
   return cookieMap;

@@ -124,7 +124,7 @@ async function handleRequest(
 
 function setupHandle(config: AppConfig, page: Page): RequestHandle {
   // Get page's layout if specified and build
-  const { wrappedHandle, layouts } = (page.layouts ?? []).reverse().reduce(
+  const { wrappedHandle, layouts } = (page.layouts ?? []).reduceRight(
     (acc, layoutId) => {
       const layout = config.layouts.get(layoutId);
 
