@@ -1,8 +1,8 @@
 import { Layout } from "./layout.ts";
 import { Module } from "./module.ts";
 
-const MODULES_DIR_PATH = Deno.cwd() + "/app/+modules";
-const LAYOUTS_DIR_PATH = Deno.cwd() + "/app/+layouts";
+const MODULES_DIR_PATH = Deno.cwd() + "/+modules";
+const LAYOUTS_DIR_PATH = Deno.cwd() + "/+layouts";
 
 export async function loadModules(
   path: string = MODULES_DIR_PATH,
