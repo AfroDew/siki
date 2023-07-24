@@ -6,7 +6,7 @@ import {
   RenderPropsHandle,
   RequestHandle,
   SimpleType,
-} from "siki/shared";
+} from "./shared/mod.ts";
 
 /** Siki page */
 export function page(config?: PageConfig) {

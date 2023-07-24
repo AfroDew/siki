@@ -1,6 +1,6 @@
 import { Layout } from "./layout.ts";
 import { Page } from "./page.ts";
-import { matchRoute, RequestHandle } from "siki/shared";
+import { matchRoute, RequestHandle } from "./shared/mod.ts";
 import { RootLayout } from "./root-layout.ts";
 import { Module, ModuleMap } from "./module.ts";
 import { loadLayouts, loadModules } from "./map-essential-directories.ts";

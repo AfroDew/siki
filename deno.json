@@ -7,11 +7,6 @@
     "start": "deno run ./app/main.ts"
   },
   "imports": {
-    "$data": "./app/data/mod.ts",
-    "+modules": "./app/+modules/mod.ts",
-    "$components": "./app/components/mod.ts",
-    "siki": "./src/mod.ts",
-    "siki/shared": "./src/shared/mod.ts",
     "std/": "https://deno.land/std@0.194.0/",
     "postcss/": "https://deno.land/x/postcss@8.4.16/",
     "autoprefixer": "https:/esm.sh/autoprefixer@10.4.14",

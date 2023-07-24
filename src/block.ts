@@ -5,7 +5,7 @@ import {
   RenderPropsHandle,
   RequestHandle,
   SimpleType,
-} from "siki/shared";
+} from "./shared/mod.ts";
 
 /** Block are server Component */
 export function block(config?: BlockConfig) {

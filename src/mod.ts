@@ -1,7 +1,7 @@
 export type { PageConfig } from "./page.ts";
-export type { Render, RenderProps, RenderPropsHandle } from "siki/shared";
+export type { Render, RenderProps, RenderPropsHandle } from "./shared/mod.ts";
 
-export { createDefaultRenderProps } from "siki/shared";
+export { createDefaultRenderProps } from "./shared/mod.ts";
 export { serveSikiApp } from "./serve.ts";
 export { component } from "./component.ts";
 export { module } from "./module.ts";
