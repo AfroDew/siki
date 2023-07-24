@@ -1,7 +1,7 @@
 import { Layout } from "./layout.ts";
 import { Page } from "./page.ts";
 import { matchRoute, RequestHandle } from "./shared/mod.ts";
-import { RootLayout } from "./root-layout.ts";
+import { wrapRootLayout } from "./root-layout.ts";
 import { Module, ModuleMap } from "./module.ts";
 import { loadLayouts, loadModules } from "./map-essential-directories.ts";
 
@@ -124,19 +124,22 @@ async function handleRequest(
 
 function setupHandle(config: AppConfig, page: Page): RequestHandle {
   // Get page's layout if specified and build
-  const wrappedHandle = (page.layouts ?? []).reverse().reduce(
+  const { wrappedHandle, layouts } = (page.layouts ?? []).reverse().reduce(
     (acc, layoutId) => {
       const layout = config.layouts.get(layoutId);
-      return (layout) ? layout.setupHandle(acc) : acc;
+
+      return (layout)
+        ? {
+          wrappedHandle: layout.setupHandle(acc.wrappedHandle),
+          layouts: acc.layouts.concat([layout]),
+        }
+        : acc;
     },
-    page.handle,
+    { wrappedHandle: page.handle, layouts: [] as Layout[] },
   );
 
   // Create default handle wrapped with root layout
-  return RootLayout.setupHandle(
-    wrappedHandle,
-    { $head: page.head },
-  );
+  return wrapRootLayout(wrappedHandle, page, layouts);
 }
 
 /** Read static file */
