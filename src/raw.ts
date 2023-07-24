@@ -5,13 +5,11 @@ export function raw(config: RawConfig): Raw {
 
 /* Type definitions */
 interface RawConfig {
-  path: string;
   handle: RawHandle;
 }
 
 export interface Raw {
   type: "raw";
-  path: string;
   handle: RawHandle;
 }
 
