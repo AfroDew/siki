@@ -50,6 +50,6 @@ export interface Render {
   (props?: Record<string, any>): HookResult;
 }
 
-type ResponseOrResult = Response | string;
+export type ResponseOrResult = Response | string;
 export type SimpleType = string | number | boolean | SimpleType[];
 export type HookResult = Promise<ResponseOrResult> | ResponseOrResult;

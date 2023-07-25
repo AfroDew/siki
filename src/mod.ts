@@ -1,5 +1,6 @@
 export type { PageConfig } from "./page.ts";
 export type {
+  HookResult,
   PageHead,
   Render,
   RenderProps,
