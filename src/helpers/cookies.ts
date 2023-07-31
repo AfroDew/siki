@@ -78,8 +78,6 @@ export function setCookies(headers: Headers, cookies: Cookie[]) {
     headers.set("Set-Cookie", cookieString);
   }
 
-  console.log({ cookies, headers });
-
   return headers;
 }
 

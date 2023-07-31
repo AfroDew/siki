@@ -5,6 +5,7 @@ export type {
   Render,
   RenderProps,
   RenderPropsHandle,
+  ResponseOrResult,
 } from "./shared/mod.ts";
 
 export { createDefaultRenderProps } from "./shared/mod.ts";
